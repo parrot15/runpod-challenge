@@ -17,7 +17,7 @@ const Page = () => {
   }, []);
 
   const loadProcessingRuns = async () => {
-    const response = await fetch('http://localhost:8000/api/runs');
+    const response = await fetch('http://localhost:8000/api/runs/processing');
     const runData = await response.json();
     setProcessingRuns(runData);
   };
@@ -108,6 +108,7 @@ const Page = () => {
           <RunPreview
             key={idx}
             runId={run._id}
+            // shouldCheckStatus={true}
             // imageUuid={run.imageUuids[0]}
           />
         ))}

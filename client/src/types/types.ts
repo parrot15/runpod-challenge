@@ -1,4 +1,4 @@
-export interface ImagePreviewProps {
+export interface RunPreviewProps {
   imageUuid: string,
   isLoading: boolean
 };
@@ -10,5 +10,5 @@ export interface RunProps {
   jobId: string,
   jobStatus: string,
   prompt: string,
-  imageUuids: string[]
+  imageUuid: string
 };

@@ -7,7 +7,7 @@ const RunSchema = new Schema({
   jobId: { type: String, required: true },
   jobStatus: { type: String, enum: Object.values(JobStatusType), required: true },
   prompt: { type: String, required: true },
-  imageUuids: [{ type: String }]
+  imageUuid: { type: String }
 });
 
 export const Run = model('Run', RunSchema);

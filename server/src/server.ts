@@ -7,7 +7,7 @@ import { Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import {connectToMongoDB, storeImage} from './utils';
 import {Run} from './models';
-import { JobStatusType, ImageProps } from './types';
+import { JobStatusType } from './types';
 
 const app = express();
 const port = 8000;
@@ -33,6 +33,7 @@ app.post('/api/runs', async (req, res) => {
   const body = {
     input: {
       prompt: prompt,
+      num_outputs: 1
     }
   }
   const config = {
@@ -51,7 +52,6 @@ app.post('/api/runs', async (req, res) => {
       jobId: response.data.id,
       jobStatus: response.data.status,
       prompt: prompt,
-      imageUuids: [],
     });
     await newRun.save();
 
@@ -64,7 +64,7 @@ app.post('/api/runs', async (req, res) => {
 });
 
 // Get all runs that are currently queued/in-progress
-app.get('/api/runs', async (req, res) => {
+app.get('/api/runs/processing', async (req, res) => {
   try {
     const runs = await Run.find({
       jobStatus: { $in: [JobStatusType.InQueue, JobStatusType.InProgress] }
@@ -73,6 +73,18 @@ app.get('/api/runs', async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).send('Failed to fetch ongoing runs.');
+  }
+});
+
+app.get('/api/runs/completed', async (req, res) => {
+  try {
+    const runs = await Run.find({
+      jobStatus: JobStatusType.Completed
+    });
+    return res.status(200).json(runs);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Failed to fetch completed runs.');
   }
 });
 
@@ -132,31 +144,45 @@ app.get('/api/runs/:runId', async (req, res) => {
 
     // Concurrently fetch and store all images, and
     // asynchronously wait until all operations are complete
-    const images = response.data.output;
-    const updatedImageUuids = await Promise.all(images.map(async ({image: imageUrl}: ImageProps) => {
-      // Fetch image from Runpod based on provided URL
-      let imageResponse;
-      try {
-        imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-      } catch (error) {
-        console.error(error);
-        return res.status(500).send('Failed to store an image.');
-      }
+    // const images = response.data.output;
+    // const updatedImageUuids = await Promise.all(images.map(async ({image: imageUrl}: ImageProps) => {
+    //   // Fetch image from Runpod based on provided URL
+    //   let imageResponse;
+    //   try {
+    //     imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    //   } catch (error) {
+    //     console.error(error);
+    //     return res.status(500).send('Failed to store an image.');
+    //   }
 
-      // Save image locally
-      const imageUuid = uuidv4();
-      // const imagePath = path.join(__dirname, 'image-storage', `${imageUuid}.png`);
-      // fs.writeFileSync(imagePath, imageResponse.data);
-      await storeImage(`${imageUuid}.png`, imageResponse.data);
+    //   // Save image locally
+    //   const imageUuid = uuidv4();
+    //   // const imagePath = path.join(__dirname, 'image-storage', `${imageUuid}.png`);
+    //   // fs.writeFileSync(imagePath, imageResponse.data);
+    //   await storeImage(`${imageUuid}.png`, imageResponse.data);
 
-      return imageUuid;
-    }));
+    //   return imageUuid;
+    // }));
+    // Fetch image from Runpod based on provided URL
+    let imageResponse;
+    try {
+      const imageUrl = response.data.output[0].image;
+      console.log('imageUrl:', imageUrl);
+      imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send('Failed to retrieve image from Runpod.');
+    }
+
+    // Save image locally
+    const imageUuid = uuidv4();
+    await storeImage(`${imageUuid}.png`, imageResponse.data);
 
     // Update run
     runToUpdate.updatedAt = new Date();
     runToUpdate.jobStatus = response.data.status;
     // runToUpdate.imageUuids.push(imageUuid);
-    runToUpdate.imageUuids = updatedImageUuids;
+    runToUpdate.imageUuid = imageUuid;
     try {
       await runToUpdate.save();
     } catch (error) {
