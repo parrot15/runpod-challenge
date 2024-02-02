@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
 // import fs from 'fs';
-// import path from 'path';
+import path from 'path';
 import { Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import {connectToMongoDB, storeImage} from './utils';
@@ -18,6 +18,9 @@ app.use(express.json());
 
 const API_KEY = 'P89BNAV2AYLQL1V470Y3SDHZ27AA96BE23KIDU2B';
 // const ENDPOINT_ID = 'il5bv9m9q2jijl';
+
+// Serve images as static files
+app.use('/static/images', express.static(path.resolve(__dirname, '..', 'image-storage')));
 
 // Start new image generation
 app.post('/api/runs', async (req, res) => {
@@ -60,6 +63,19 @@ app.post('/api/runs', async (req, res) => {
   }
 });
 
+// Get all runs that are currently queued/in-progress
+app.get('/api/runs', async (req, res) => {
+  try {
+    const runs = await Run.find({
+      jobStatus: { $in: [JobStatusType.InQueue, JobStatusType.InProgress] }
+    });
+    return res.status(200).json(runs);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Failed to fetch ongoing runs.');
+  }
+});
+
 // Get generation status and results
 app.get('/api/runs/:runId', async (req, res) => {
   const runId = req.params.runId;
@@ -71,8 +87,10 @@ app.get('/api/runs/:runId', async (req, res) => {
   if (!runToUpdate) {
     return res.status(404).send('Run not found.');
   }
+  console.log('runToUpdate:', JSON.stringify(runToUpdate));
 
   const apiUrl = `https://api.runpod.ai/v2/stable-diffusion-v1/status/${runToUpdate.jobId}`;
+  console.log('apiUrl:', apiUrl);
   const config = {
     headers: {
       accept: 'application/json',
@@ -82,12 +100,12 @@ app.get('/api/runs/:runId', async (req, res) => {
   };
   // try {
   // const response = await axios.get(apiUrl, config);
-  let response; // Declare response variable outside the try block
+  let response;
   try {
     response = await axios.get(apiUrl, config);
-    // Your logic to handle the response goes here
+    // console.log(JSON.stringify(response.data));
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return res.status(500).send('Failed to check run status.');
   }
 
@@ -143,7 +161,7 @@ app.get('/api/runs/:runId', async (req, res) => {
       await runToUpdate.save();
     } catch (error) {
       console.error(error);
-      res.status(500).send('Failed to update run.');
+      return res.status(500).send('Failed to update run.');
     }
     
     // Send back the updated run
@@ -152,7 +170,7 @@ app.get('/api/runs/:runId', async (req, res) => {
     // Job not complete, so just send back job ID and status
     return res.status(200).json({
       jobId: response.data.id,
-      status: response.data.status
+      jobStatus: response.data.status
     });
   }
   // } catch (error) {
