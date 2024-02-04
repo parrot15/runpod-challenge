@@ -5,8 +5,10 @@ import path from 'path';
 import mongoose from 'mongoose';
 
 export const connectToMongoDB = () => {
+  const dbHost = 'db';
+  const dbPort = 27017;
   const dbName = 'runs_db';
-  const mongoUri = `mongodb://localhost:27017/${dbName}`;
+  const mongoUri = `mongodb://${dbHost}:${dbPort}/${dbName}`;
   mongoose.connect(mongoUri).then(() => {
     console.log('Connected to the database successfully');
   }).catch(err => {
