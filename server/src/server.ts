@@ -63,30 +63,162 @@ app.post('/api/runs', async (req, res) => {
   }
 });
 
-// Get all runs that are currently queued/in-progress
-app.get('/api/runs/processing', async (req, res) => {
+// Merge these into the same endpoint - ?state=processing,completed
+// app.get('/api/runs', async (req, res) => {
+//   const state = req.query.state;
+//   if (state && state !== 'processing' && state !== 'completed') {
+//     return res.status(400).send('Invalid value for state.');
+//   }
+
+//   const order = req.query.order;
+//   if (order && order !== 'recent') {
+//     return res.status(400).send(`Invalid value for order: '${order}'`);
+//   }
+
+//   const amount = parseInt(req.query.amount as string, 10) || 5;
+//   if (amount && !Number.isInteger(amount)) {  // Not an integer
+//     return res.status(400).send('Amount must be an integer.');
+//   }
+//   if (amount <= 0) {  // Negative integer
+//     return res.status(400).send('Amount must be > 0.');
+//   }
+
+//   try {
+//     let query = Run.find();
+//     if (state === 'processing') {
+//       query = Run.find({
+//         jobStatus: { $in: [JobStatusType.InQueue, JobStatusType.InProgress] }
+//       });
+//     } else if (state === 'completed') {
+//       query = Run.find({
+//         jobStatus: JobStatusType.Completed
+//       });
+//     }
+//     if (order === 'recent') {
+//       query = query.sort({createdAt: -1});
+//     }
+//     if (amount)
+
+//     const runs = await query;
+//     return res.status(200).json(runs);
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).send('Failed to fetch runs.');
+//   }
+// });
+
+// Get runs according to client specifications
+// state - Whether to get runs currently processing or completed
+// order - Whether to sort runs by recency
+// amount - How many runs to get (all if not specified)
+app.get('/api/runs', async (req, res) => {
+  const { state, order, amount } = req.query;
+  let query = Run.find();
+
+  // Validate and handle state parameter
+  if (state) {
+    if (state === 'processing') {
+      query = Run.find({
+        jobStatus: { $in: [JobStatusType.InQueue, JobStatusType.InProgress] }
+      });
+    } else if (state === 'completed') {
+      query = Run.find({
+        jobStatus: JobStatusType.Completed
+      });
+    } else {
+      return res.status(400).send(`Invalid value for state: ${state}.`);
+    }
+  }
+
+  // Validate and handle order parameter
+  if (order) {
+    if (order === 'recent') {
+      // Creation time from most recent to least recent
+      query = query.sort({createdAt: -1});
+    } else {
+      return res.status(400).send(`Invalid value for order: ${order}.`);
+    }
+  }
+
+  // Validate and handle amount parameter
+  if (amount) {
+    const amountNumber = parseInt(amount as string, 10) || 5;
+    if (!Number.isInteger(amountNumber)) {  // Not an integer
+      return res.status(400).send('Invalid value for amount: must be an integer.');
+    }
+    if (amountNumber <= 0) {  // Negative integer
+      return res.status(400).send('Invalid value for amount: must be > 0.');
+    }
+    query = query.limit(amountNumber);
+  }
+
   try {
-    const runs = await Run.find({
-      jobStatus: { $in: [JobStatusType.InQueue, JobStatusType.InProgress] }
-    });
+    const runs = await query;
     return res.status(200).json(runs);
   } catch (error) {
     console.error(error);
-    return res.status(500).send('Failed to fetch ongoing runs.');
+    return res.status(500).send('Failed to fetch runs.');
   }
 });
 
-app.get('/api/runs/completed', async (req, res) => {
-  try {
-    const runs = await Run.find({
-      jobStatus: JobStatusType.Completed
-    });
-    return res.status(200).json(runs);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send('Failed to fetch completed runs.');
-  }
-});
+
+
+// Get all runs that are currently queued/in-progress
+// app.get('/api/runs/processing', async (req, res) => {
+//   const order = req.query.order;
+//   if (order && order !== 'recent') {
+//     return res.status(400).send(`Invalid value for order: '${order}'`);
+//   }
+
+//   try {
+//     let query = Run.find({
+//       jobStatus: { $in: [JobStatusType.InQueue, JobStatusType.InProgress] }
+//     });
+//     if (order === 'recent') {
+//       query = query.sort({createdAt: -1});
+//     }
+
+//     const runs = await query;
+//     return res.status(200).json(runs);
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).send('Failed to fetch ongoing runs.');
+//   }
+// });
+
+// // Get all runs that are completed
+// app.get('/api/runs/completed', async (req, res) => {
+//   const order = req.query.order;
+//   if (order && order !== 'recent') {
+//     return res.status(400).send(`Invalid value for order: '${order}'`);
+//   }
+
+//   const amount = parseInt(req.query.amount as string, 10) || 5;
+//   if (amount && !Number.isInteger(amount)) {  // Not an integer
+//     return res.status(400).send('Amount must be an integer.');
+//   }
+//   if (amount <= 0) {  // Negative integer
+//     return res.status(400).send('Amount must be > 0.');
+//   }
+
+//   try {
+//     let query = Run.find({
+//       jobStatus: JobStatusType.Completed
+//     });
+//     if (order === 'recent') {
+//       query = query.sort({createdAt: -1});
+//     }
+//     if (amount) {
+
+//     }
+
+//     const runs = await query;
+//     return res.status(200).json(runs);
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).send('Failed to fetch completed runs.');
+//   }
+// });
 
 // Get generation status and results
 app.get('/api/runs/:runId', async (req, res) => {
