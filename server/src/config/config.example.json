@@ -1,6 +1,6 @@
 {
   "port": 8000,
-  "imageDir": "image-storage",
+  "imageDir": "/data/image-storage",
   "runpod": {
     "baseUrl": "https://api.runpod.ai/v2/stable-diffusion-v1",
     "timeout": 1000,

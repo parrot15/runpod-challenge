@@ -18,7 +18,7 @@ export const connectToMongoDB = async () => {
 
 export const storeImage = async (filename: string, data: string | NodeJS.ArrayBufferView) => {
   try {
-    const imagePath = path.resolve(__dirname, '..', config.imageDir, filename);
+    const imagePath = path.join(config.imageDir, filename);
     await fs.writeFile(imagePath, data);
   } catch (error) {
     console.error('Failed to store image:', error);

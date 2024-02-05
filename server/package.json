@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --transpile-only src/server.ts",
+    "dev": "ts-node-dev --transpile-only src/main.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/main.js",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "format": "npx prettier --write ."
   },

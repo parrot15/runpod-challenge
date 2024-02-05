@@ -1,26 +1,16 @@
-import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import express from 'express';
-import cors from 'cors';
 import axios from 'axios';
 import { Types } from 'mongoose';
 import api from './api';
-import {connectToMongoDB, storeImage} from './utils';
+import {storeImage} from './utils';
 import {Run} from './models';
 import { JobStatusType } from './types';
-import config from './config/config.json';
 
-const app = express();
-app.use(cors());
-
-// Add body parsing middleware
-app.use(express.json());
-
-// Serve images as static files
-app.use('/static/images', express.static(path.resolve(__dirname, '..', config.imageDir)));
+const router = express.Router();
 
 // Start new image generation
-app.post('/api/runs', async (req, res) => {
+router.post('/runs', async (req, res) => {
   const prompt = req.body.prompt;
   if (!prompt) {
     return res.status(400).send('No prompt in request.');
@@ -55,7 +45,7 @@ app.post('/api/runs', async (req, res) => {
 // state - Whether to get runs currently processing or completed
 // order - Whether to sort runs by recency
 // amount - How many runs to get (all if not specified)
-app.get('/api/runs', async (req, res) => {
+router.get('/runs', async (req, res) => {
   const { state, order, amount } = req.query;
   let query = Run.find();
 
@@ -106,7 +96,7 @@ app.get('/api/runs', async (req, res) => {
 });
 
 // Get generation status and results
-app.get('/api/runs/:runId', async (req, res) => {
+router.get('/runs/:runId', async (req, res) => {
   const runId = req.params.runId;
   if (!runId || !Types.ObjectId.isValid(runId)) {
     return res.status(400).send('Invalid run ID.');
@@ -164,7 +154,4 @@ app.get('/api/runs/:runId', async (req, res) => {
   }
 });
 
-app.listen(config.port, () => {
-  connectToMongoDB();
-  console.log(`Server is running on http://localhost:${config.port}`);
-});
+export default router;

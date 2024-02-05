@@ -86,6 +86,7 @@ const RunPreview = ({runId, imageUuid = '', jobStatus, prompt, createdAt}: RunPr
           // Tell Next.js to not mess with the URL so we can
           // properly load from the server
           unoptimized={true}
+          priority={true}
         />
         {isHovered && (
           <div className="opacity-0 hover:opacity-100 duration-300 absolute inset-0 bg-black bg-opacity-50 flex items-end justify-center text-white p-4">

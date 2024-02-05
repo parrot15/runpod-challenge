@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import api from '@/config/api';
 import RunPreview from '@/components/RunPreview';
 import UserInput from '@/components/UserInput';
-import RecentGenerations from '@/components/RecentGenerations';
+import RecentRuns from '@/components/RecentRuns';
 import { RunProps } from '@/types/types';
 import { JobStatusType } from '@/constants/constants';
 
@@ -66,7 +66,7 @@ const Page = () => {
           />
         ))}
       </div>
-      <RecentGenerations />
+      <RecentRuns />
     </div>
   );
 };

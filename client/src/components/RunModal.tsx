@@ -58,6 +58,7 @@ const RunModal = ({ imageUuid, prompt, createdAt, isOpen, onClose}: RunModalProp
                     // Tell Next.js to not mess with the URL so we can
                     // properly load from the server
                     unoptimized={true}
+                    priority={true}
                   />
                 </div>
                 <div className="mt-4 flex justify-center">

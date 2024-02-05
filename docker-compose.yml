@@ -15,7 +15,7 @@ services:
       - "8000:8000"
     volumes:
       - ./server:/app
-      - image-storage:/app/image-storage
+      - image-storage:/data/image-storage
     depends_on:
       - db
   db:

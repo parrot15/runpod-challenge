@@ -7,7 +7,7 @@ import RunPreview from './RunPreview';
 import { RunProps } from '@/types/types';
 import { JobStatusType } from '@/constants/constants';
 
-const RecentGenerations = () => {
+const RecentRuns = () => {
   const [recentRuns, setRecentRuns] = useState<RunProps[]>([]);
   const [isLoading, setLoading] = useState(false);
 
@@ -61,4 +61,4 @@ const RecentGenerations = () => {
     </div>
   );
 };
-export default RecentGenerations;
+export default RecentRuns;
