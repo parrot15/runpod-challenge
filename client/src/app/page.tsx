@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import api from '@/config/api';
 import RunPreview from '@/components/RunPreview';
 import UserInput from '@/components/UserInput';
 import RecentGenerations from '@/components/RecentGenerations';
@@ -15,9 +17,20 @@ const Page = () => {
   }, []);
 
   const loadProcessingRuns = async () => {
-    const response = await fetch('http://localhost:8000/api/runs?state=processing&order=recent');
-    const runData = await response.json();
-    setProcessingRuns(runData);
+    let runs;
+    try {
+      const response = await api.get('/runs', {
+        params: {
+          state: 'processing',
+          order: 'recent'
+        }
+      });
+      runs = response.data;
+    } catch (error) {
+      toast.error('Failed to get processing runs.');
+      return;
+    }
+    setProcessingRuns(runs);
   };
 
   const sendPrompt = async (prompt: string) => {
@@ -25,18 +38,17 @@ const Page = () => {
       return;
     }
 
+    let newRun: RunProps;
     try {
-      const response = await fetch('http://localhost:8000/api/runs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({prompt: prompt})
-      });
-      const newRun = await response.json();
-      console.log('Run:', JSON.stringify(newRun));
-      setProcessingRuns(runs => [...runs, newRun]);
+      const response = await api.post('/runs', 
+        {prompt: prompt},
+      );
+      newRun = response.data;
     } catch (error) {
-      console.error('Failed to send prompt:', error);
+      toast.error('Failed to send prompt.');
+      return;
     }
+    setProcessingRuns(runs => [...runs, newRun]);
   }
   return (
     <div>

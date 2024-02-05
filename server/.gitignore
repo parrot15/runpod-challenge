@@ -1,5 +1,5 @@
 # dependencies
 /node_modules
 
-# generated images
-/image-storage
+# config file
+/src/config/config.json

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import NavBar from '@/components/Navbar';
+import NotificationProvider from '@/components/NotificationProvider';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import '@/styles/globals.css';
 
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-gray-900 justify-center`}>
         <NavBar />
         {children}
+        <NotificationProvider />
       </body>
     </html>
   )

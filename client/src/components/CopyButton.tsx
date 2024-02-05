@@ -1,3 +1,5 @@
+'use client';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
@@ -24,11 +26,7 @@ const CopyButton = ({ prompt }: CopyButtonProps) => {
       onClick={handleCopy}
       className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${isCopied ? 'bg-green-500' : 'bg-purple-700 hover:opacity-90'}`}
     >
-      {isCopied ? (
-        <FontAwesomeIcon icon={faCheck} className='mr-2' />
-      ) : (
-        <FontAwesomeIcon icon={faCopy} className='mr-2' />
-      )}
+      <FontAwesomeIcon icon={isCopied ? faCheck : faCopy} className='mr-2' />
       {isCopied ? 'Copied' : 'Copy prompt'}
     </button>
   );

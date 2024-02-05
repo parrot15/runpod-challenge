@@ -34,8 +34,6 @@ const UserInput = ({ initialMessage = '', onSend }: UserInputProps) => {
         value={message}
         onChange={(event) => setMessage(event.target.value)}
         onKeyDown={handleKeyDown}
-        // className="border-2 border-gray-300 rounded-lg px-2 w-10/12"
-        // className="border-2 border-purple-300 rounded-lg px-2 w-10/12 focus:border-purple-500"
         placeholder="A cyborg overlooking a vast cyberpunk city, stunning, high-resolution"
         rows={4}
         className="mr-2 p-2 w-2/5 h-24 rounded-lg border-2 border-solid border-slate-700 text-white placeholder-gray-400 bg-gray-600 focus:outline-none focus:border-purple-700 resize-none"
@@ -43,7 +41,6 @@ const UserInput = ({ initialMessage = '', onSend }: UserInputProps) => {
       <button
         type="submit"
         disabled={!message}
-        // className="bg-blue-500 text-white rounded-lg px-4 ml-2"
         className="bg-purple-700 hover:bg-gradient-to-r hover:from-violet-500 hover:to-fuchsia-500 hover:opacity-90 duration-300 text-white rounded-lg w-20 h-10 cursor-pointer"
       >
         <FontAwesomeIcon icon={faPaperPlane} className='mr-2' />Send

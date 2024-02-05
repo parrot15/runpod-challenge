@@ -1,0 +1,14 @@
+{
+  "port": 8000,
+  "imageDir": "image-storage",
+  "runpod": {
+    "baseUrl": "https://api.runpod.ai/v2/stable-diffusion-v1",
+    "timeout": 1000,
+    "apiKey": "YOUR API KEY"
+  },
+  "mongoDb": {
+    "host": "db",
+    "port": 27017,
+    "dbName": "runs_db"
+  }
+}

@@ -54,7 +54,9 @@ const RunModal = ({ imageUuid, prompt, createdAt, isOpen, onClose}: RunModalProp
                     alt='Generated image'
                     width={1024}
                     height={1024}
-                    className="rounded-xl object-cover"
+                    className="rounded-xl object-cover" // Ensure the image covers the area well
+                    // Tell Next.js to not mess with the URL so we can
+                    // properly load from the server
                     unoptimized={true}
                   />
                 </div>
