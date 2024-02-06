@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 interface UserInputProps {
-  initialMessage?: string,
-  onSend: (message: string) => void,
+  initialMessage?: string;
+  onSend: (message: string) => void;
 }
 
 const UserInput = ({ initialMessage = '', onSend }: UserInputProps) => {
@@ -30,7 +30,7 @@ const UserInput = ({ initialMessage = '', onSend }: UserInputProps) => {
 
   return (
     <form onSubmit={sendMessage} className="p-2 flex justify-center">
-      <textarea 
+      <textarea
         value={message}
         onChange={(event) => setMessage(event.target.value)}
         onKeyDown={handleKeyDown}
@@ -43,7 +43,8 @@ const UserInput = ({ initialMessage = '', onSend }: UserInputProps) => {
         disabled={!message}
         className="bg-purple-700 hover:bg-gradient-to-r hover:from-violet-500 hover:to-fuchsia-500 hover:opacity-90 duration-300 text-white rounded-lg w-20 h-10 cursor-pointer"
       >
-        <FontAwesomeIcon icon={faPaperPlane} className='mr-2' />Send
+        <FontAwesomeIcon icon={faPaperPlane} className="mr-2" />
+        Send
       </button>
     </form>
   );

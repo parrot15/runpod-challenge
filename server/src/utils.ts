@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import mongoose from 'mongoose';
-import config from './config/config.json'
+import config from './config/config.json';
 
 export const connectToMongoDB = async () => {
   const dbHost = config.mongoDb.host;
@@ -16,7 +16,10 @@ export const connectToMongoDB = async () => {
   }
 };
 
-export const storeImage = async (filename: string, data: string | NodeJS.ArrayBufferView) => {
+export const storeImage = async (
+  filename: string,
+  data: string | NodeJS.ArrayBufferView,
+) => {
   try {
     const imagePath = path.join(config.imageDir, filename);
     await fs.writeFile(imagePath, data);

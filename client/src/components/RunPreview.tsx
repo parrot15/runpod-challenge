@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useEffect, useState, useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,14 +11,20 @@ import { JobStatusType, JOB_STATUS_MESSAGES } from '@/constants/constants';
 import axios, { AxiosError } from 'axios';
 
 interface RunPreviewProps {
-  runId: string,
-  imageUuid?: string,
-  jobStatus: JobStatusType,
-  prompt: string,
-  createdAt: Date,
-};
+  runId: string;
+  imageUuid?: string;
+  jobStatus: JobStatusType;
+  prompt: string;
+  createdAt: Date;
+}
 
-const RunPreview = ({runId, imageUuid = '', jobStatus, prompt, createdAt}: RunPreviewProps) => {
+const RunPreview = ({
+  runId,
+  imageUuid = '',
+  jobStatus,
+  prompt,
+  createdAt,
+}: RunPreviewProps) => {
   const [uuid, setUuid] = useState(imageUuid);
   const [status, setStatus] = useState<JobStatusType>(jobStatus);
   const [isHovered, setHovered] = useState(false);
@@ -48,7 +54,7 @@ const RunPreview = ({runId, imageUuid = '', jobStatus, prompt, createdAt}: RunPr
       }
     } finally {
       if (shouldPoll) {
-        setTimeout(() => pollStatus(), 5000);  // Poll every 5 seconds
+        setTimeout(() => pollStatus(), 5000); // Poll every 5 seconds
       }
     }
   }, [runId]);
@@ -63,7 +69,7 @@ const RunPreview = ({runId, imageUuid = '', jobStatus, prompt, createdAt}: RunPr
     // Status indicator
     return (
       <div className="m-2 shadow-lg rounded-lg overflow-hidden flex items-center justify-center aspect-square w-64 h-64 bg-gradient-to-r from-gray-200 to-gray-400 animate-pulse">
-        <FontAwesomeIcon icon={faSpinner} className='mr-2 animate-spin' />
+        <FontAwesomeIcon icon={faSpinner} className="mr-2 animate-spin" />
         {JOB_STATUS_MESSAGES[status] || 'Loading...'}
       </div>
     );
@@ -79,7 +85,7 @@ const RunPreview = ({runId, imageUuid = '', jobStatus, prompt, createdAt}: RunPr
       >
         <Image
           src={`http://localhost:8000/static/images/${uuid}.png`}
-          alt='Generated image'
+          alt="Generated image"
           width={256}
           height={256}
           className="rounded-xl object-cover" // Ensure the image covers the area well
@@ -94,13 +100,15 @@ const RunPreview = ({runId, imageUuid = '', jobStatus, prompt, createdAt}: RunPr
           </div>
         )}
       </div>
-      {status === JobStatusType.Completed && <RunModal
-        imageUuid={uuid}
-        prompt={prompt}
-        createdAt={createdAt}
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-      />}
+      {status === JobStatusType.Completed && (
+        <RunModal
+          imageUuid={uuid}
+          prompt={prompt}
+          createdAt={createdAt}
+          isOpen={isModalOpen}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
     </>
   );
 };

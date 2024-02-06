@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import api from '@/config/api';
 import RunPreview from '@/components/RunPreview';
@@ -17,10 +17,12 @@ const Page = () => {
   const loadCompletedRuns = async () => {
     let runData;
     try {
-      const response = await api.get('/runs', { params: {
-        state: 'completed',
-        order: 'recent',
-      }});
+      const response = await api.get('/runs', {
+        params: {
+          state: 'completed',
+          order: 'recent',
+        },
+      });
       runData = response.data;
     } catch (error) {
       toast.error('Failed to get completed runs.');

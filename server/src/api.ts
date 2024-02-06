@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 import appConfig from './config/config.json';
 
 const api = axios.create({
   baseURL: appConfig.runpod.baseUrl,
-  timeout: appConfig.runpod.timeout, 
+  timeout: appConfig.runpod.timeout,
 });
 
 api.interceptors.request.use((config) => {

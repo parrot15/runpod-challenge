@@ -4,8 +4,8 @@ export enum JobStatusType {
   Completed = 'COMPLETED',
   Failed = 'FAILED',
   Canceled = 'CANCELLED',
-  TimedOut = 'TIMED_OUT'
-};
+  TimedOut = 'TIMED_OUT',
+}
 
 export const JOB_STATUS_MESSAGES = {
   [JobStatusType.InQueue]: 'Queued...',
@@ -13,5 +13,5 @@ export const JOB_STATUS_MESSAGES = {
   [JobStatusType.Completed]: 'Completed!',
   [JobStatusType.Failed]: 'Failed!',
   [JobStatusType.Canceled]: 'Canceled!',
-  [JobStatusType.TimedOut]: 'Timed Out!'
+  [JobStatusType.TimedOut]: 'Timed Out!',
 };

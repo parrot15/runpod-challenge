@@ -1,7 +1,7 @@
 import path from 'path';
 import express from 'express';
 import cors from 'cors';
-import {connectToMongoDB} from './utils';
+import { connectToMongoDB } from './utils';
 import endpoints from './endpoints';
 import config from './config/config.json';
 

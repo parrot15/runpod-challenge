@@ -4,9 +4,9 @@ export enum JobStatusType {
   Completed = 'COMPLETED',
   Failed = 'FAILED',
   Canceled = 'CANCELLED',
-  TimedOut = 'TIMED_OUT'
-};
+  TimedOut = 'TIMED_OUT',
+}
 
 export interface ImageProps {
-  image: string
-};
+  image: string;
+}

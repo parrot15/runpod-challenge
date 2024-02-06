@@ -3,6 +3,6 @@ const nextConfig = {
   images: {
     domains: ['localhost'], // Allow images from localhost
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

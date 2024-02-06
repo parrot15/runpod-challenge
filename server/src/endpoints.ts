@@ -3,8 +3,8 @@ import express from 'express';
 import axios from 'axios';
 import { Types } from 'mongoose';
 import api from './api';
-import {storeImage} from './utils';
-import {Run} from './models';
+import { storeImage } from './utils';
+import { Run } from './models';
 import { JobStatusType } from './types';
 
 const router = express.Router();
@@ -17,7 +17,9 @@ router.post('/runs', async (req, res) => {
   }
   let response;
   try {
-    response = await api.post('/run', {input: {prompt: prompt, num_outputs: 1}});
+    response = await api.post('/run', {
+      input: { prompt: prompt, num_outputs: 1 },
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).send('Failed to start run.');
@@ -53,11 +55,11 @@ router.get('/runs', async (req, res) => {
   if (state) {
     if (state === 'processing') {
       query = Run.find({
-        jobStatus: { $in: [JobStatusType.InQueue, JobStatusType.InProgress] }
+        jobStatus: { $in: [JobStatusType.InQueue, JobStatusType.InProgress] },
       });
     } else if (state === 'completed') {
       query = Run.find({
-        jobStatus: JobStatusType.Completed
+        jobStatus: JobStatusType.Completed,
       });
     } else {
       return res.status(400).send(`Invalid value for state: ${state}.`);
@@ -68,7 +70,7 @@ router.get('/runs', async (req, res) => {
   if (order) {
     if (order === 'recent') {
       // Creation time from most recent to least recent
-      query = query.sort({createdAt: -1});
+      query = query.sort({ createdAt: -1 });
     } else {
       return res.status(400).send(`Invalid value for order: ${order}.`);
     }
@@ -77,10 +79,14 @@ router.get('/runs', async (req, res) => {
   // Validate and handle amount parameter
   if (amount) {
     const amountNumber = parseInt(amount as string, 10) || 5;
-    if (!Number.isInteger(amountNumber)) {  // Not an integer
-      return res.status(400).send('Invalid value for amount: must be an integer.');
+    if (!Number.isInteger(amountNumber)) {
+      // Not an integer
+      return res
+        .status(400)
+        .send('Invalid value for amount: must be an integer.');
     }
-    if (amountNumber <= 0) {  // Negative integer
+    if (amountNumber <= 0) {
+      // Negative integer
       return res.status(400).send('Invalid value for amount: must be > 0.');
     }
     query = query.limit(amountNumber);
@@ -122,7 +128,9 @@ router.get('/runs/:runId', async (req, res) => {
     let imageResponse;
     try {
       const imageUrl = response.data.output[0].image;
-      imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+      imageResponse = await axios.get(imageUrl, {
+        responseType: 'arraybuffer',
+      });
     } catch (error) {
       console.error(error);
       return res.status(500).send('Failed to retrieve image from Runpod.');
@@ -142,14 +150,14 @@ router.get('/runs/:runId', async (req, res) => {
       console.error(error);
       return res.status(500).send('Failed to update run.');
     }
-    
+
     // Send back the updated run
     return res.status(200).json(runToUpdate);
   } else {
     // Job not complete, so just send back job ID and status
     return res.status(200).json({
       jobId: response.data.id,
-      jobStatus: response.data.status
+      jobStatus: response.data.status,
     });
   }
 });

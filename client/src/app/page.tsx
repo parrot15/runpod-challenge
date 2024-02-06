@@ -22,8 +22,8 @@ const Page = () => {
       const response = await api.get('/runs', {
         params: {
           state: 'processing',
-          order: 'recent'
-        }
+          order: 'recent',
+        },
       });
       runs = response.data;
     } catch (error) {
@@ -40,21 +40,21 @@ const Page = () => {
 
     let newRun: RunProps;
     try {
-      const response = await api.post('/runs', 
-        {prompt: prompt},
+      const response = await api.post(
+        '/runs',
+        { prompt: prompt },
+        { timeout: 3000 },
       );
       newRun = response.data;
     } catch (error) {
       toast.error('Failed to send prompt.');
       return;
     }
-    setProcessingRuns(runs => [...runs, newRun]);
-  }
+    setProcessingRuns((runs) => [...runs, newRun]);
+  };
   return (
     <div>
-      <UserInput
-        onSend={(message) => sendPrompt(message)}
-      />
+      <UserInput onSend={(message) => sendPrompt(message)} />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center">
         {processingRuns.map((run, idx) => (
           <RunPreview
