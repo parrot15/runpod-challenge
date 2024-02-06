@@ -7,6 +7,9 @@ import RunPreview from './RunPreview';
 import { RunProps } from '@/types/types';
 import { JobStatusType } from '@/constants/constants';
 
+/**
+ * Displays user's 5 most recent runs for convenience.
+ */
 const RecentRuns = () => {
   const [recentRuns, setRecentRuns] = useState<RunProps[]>([]);
   const [isLoading, setLoading] = useState(false);

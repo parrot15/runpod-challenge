@@ -3,6 +3,10 @@ import path from 'path';
 import mongoose from 'mongoose';
 import config from './config/config.json';
 
+/**
+ * Connects to MongoDB database which stores all the
+ * run metadata.
+ */
 export const connectToMongoDB = async () => {
   const dbHost = config.mongoDb.host;
   const dbPort = config.mongoDb.port;
@@ -16,6 +20,12 @@ export const connectToMongoDB = async () => {
   }
 };
 
+/**
+ * Stores a file locally (ends up in the 'image-storage'
+ * Docker volume).
+ * @param filename The name of the file to store.
+ * @param data The contents of the file to store.
+ */
 export const storeImage = async (
   filename: string,
   data: string | NodeJS.ArrayBufferView,

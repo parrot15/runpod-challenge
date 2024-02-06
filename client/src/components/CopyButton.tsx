@@ -8,6 +8,10 @@ interface CopyButtonProps {
   prompt: string;
 }
 
+/**
+ * A button that copies a given text to the clipboard. When clicked,
+ * changes appearance to indicate that text was successfully copied.
+ */
 const CopyButton = ({ prompt }: CopyButtonProps) => {
   const [isCopied, setCopied] = useState(false);
 

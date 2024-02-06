@@ -9,7 +9,11 @@ import { JobStatusType } from './types';
 
 const router = express.Router();
 
-// Start new image generation
+/**
+ * Starts a new image generation run. Accepts a prompt in the
+ * request body, stores the run metadata in the database, and
+ * returns the created run.
+ */
 router.post('/runs', async (req, res) => {
   const prompt = req.body.prompt;
   if (!prompt) {
@@ -43,10 +47,12 @@ router.post('/runs', async (req, res) => {
   }
 });
 
-// Get runs according to client specifications
-// state - Whether to get runs currently processing or completed
-// order - Whether to sort runs by recency
-// amount - How many runs to get (all if not specified)
+/**
+ * Fetches runs based on query parameters.
+ * state - Whether to get runs currently processing or completed
+ * order - Whether to sort runs by recency
+ * amount - How many runs to get (all if not specified)
+ */
 router.get('/runs', async (req, res) => {
   const { state, order, amount } = req.query;
   let query = Run.find();
@@ -101,6 +107,13 @@ router.get('/runs', async (req, res) => {
   }
 });
 
+/**
+ * Fetches the status and results of a specific run. If the run
+ * is completed, it retrieves the generated image from Runpod,
+ * stores it locally, updates the run metadata, and returns the
+ * updated run. If not completed, just returns the run's current
+ * status.
+ */
 // Get generation status and results
 router.get('/runs/:runId', async (req, res) => {
   const runId = req.params.runId;

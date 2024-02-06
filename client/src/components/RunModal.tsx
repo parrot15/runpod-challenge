@@ -11,6 +11,11 @@ interface RunModalProps {
   onClose: () => void;
 }
 
+/**
+ * Displays a modal with details on the run. Shows a much larger view of
+ * the image, the prompt used to generate it, and the creation time. Also
+ * includes a copy button to copy the prompt to the clipboard.
+ */
 const RunModal = ({
   imageUuid,
   prompt,

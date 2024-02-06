@@ -9,6 +9,11 @@ interface UserInputProps {
   onSend: (message: string) => void;
 }
 
+/**
+ * The text area for users to enter the prompt for the run. Users can either
+ * press enter or the send button to submit. Users can shift+enter to create
+ * a new line in the text area.
+ */
 const UserInput = ({ initialMessage = '', onSend }: UserInputProps) => {
   const [message, setMessage] = useState(initialMessage);
 

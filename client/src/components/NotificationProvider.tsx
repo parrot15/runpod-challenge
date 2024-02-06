@@ -3,6 +3,9 @@
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+/**
+ * Sets up application configuration for notifications.
+ */
 const NotificationProvider = () => {
   return (
     <ToastContainer

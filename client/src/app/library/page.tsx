@@ -7,6 +7,9 @@ import RunPreview from '@/components/RunPreview';
 import { RunProps } from '@/types/types';
 import { JobStatusType } from '@/constants/constants';
 
+/**
+ * Displays user's library of completed runs.
+ */
 const Page = () => {
   const [completedRuns, setCompletedRuns] = useState<RunProps[]>([]);
 

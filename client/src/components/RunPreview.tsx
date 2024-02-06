@@ -18,6 +18,12 @@ interface RunPreviewProps {
   createdAt: Date;
 }
 
+/**
+ * Displays a preview of the run. When the run is processing, it continuously
+ * polls the status from the server and displays it in real-time. When the run
+ * is completed, displays the image and the prompt used to generate it (when
+ * the user hovers over it).
+ */
 const RunPreview = ({
   runId,
   imageUuid = '',

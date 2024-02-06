@@ -6,6 +6,10 @@ import { usePathname } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faImages } from '@fortawesome/free-solid-svg-icons';
 
+/**
+ * Navigation bar for the application. Displays links to the
+ * main generation page, and the library page.
+ */
 const NavBar = () => {
   const pathname = usePathname();
   const isActive = (selectedPathname: string) => pathname === selectedPathname;

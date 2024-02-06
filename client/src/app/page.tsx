@@ -9,6 +9,10 @@ import RecentRuns from '@/components/RecentRuns';
 import { RunProps } from '@/types/types';
 import { JobStatusType } from '@/constants/constants';
 
+/**
+ * Displays all processing runs and allows users to submit prompts for
+ * new runs.
+ */
 const Page = () => {
   const [processingRuns, setProcessingRuns] = useState<RunProps[]>([]);
 
